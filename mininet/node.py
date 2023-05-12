@@ -715,7 +715,7 @@ class Docker ( Host ):
     We use the docker-py client library to control docker.
     """
 
-    def __init__(self, name, dimage=None, dcmd=None, build_params={},
+    def __init__(self, name, dimage=None, dcmd=None, build_params={}, dnameprefix=None,
                  **kwargs):
         """
         Creates a Docker container as Mininet host.
@@ -738,7 +738,7 @@ class Docker ( Host ):
         * updateMemoryLimits(...)
         """
         self.dimage = dimage
-        self.dnameprefix = "mn"
+        self.dnameprefix = dnameprefix or "mn"
         self.dcmd = dcmd if dcmd is not None else "/bin/bash"
         self.dc = None  # pointer to the dict containing 'Id' and 'Warnings' keys of the container
         self.dcinfo = None
@@ -863,7 +863,7 @@ class Docker ( Host ):
             #network_disabled=True,  # docker stats breaks if we disable the default network
             host_config=hc,
             ports=defaults['ports'],
-            labels=['com.containernet'],
+            labels=['com.containernet', 'netunicorn'],
             volumes=[self._get_volume_mount_name(v) for v in self.volumes if self._get_volume_mount_name(v) is not None],
             hostname=name
         )
