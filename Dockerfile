@@ -25,7 +25,8 @@ RUN apt-get update \
 # install containernet (using its Ansible playbook)
 COPY . /containernet
 WORKDIR /containernet/ansible
-RUN ansible-playbook -i "localhost," -c local --skip-tags "notindocker" install.yml
+RUN ansible-playbook -i "localhost," -c local --skip-tags "notindocker" install.yml && \
+    apt-get autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && pip cache purge
 WORKDIR /containernet
 RUN make develop
 
