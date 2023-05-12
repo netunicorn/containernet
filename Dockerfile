@@ -1,5 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 LABEL maintainer="manuel@peuster.de"
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # install required packages
 RUN apt-get clean
@@ -16,7 +18,9 @@ RUN apt-get update \
     curl \
     iptables \
     iputils-ping \
-    sudo
+    sudo \
+    nano \
+    && apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # install containernet (using its Ansible playbook)
 COPY . /containernet
@@ -33,5 +37,5 @@ ENV CONTAINERNET_NESTED 1
 
 # Important: This entrypoint is required to start the OVS service
 ENTRYPOINT ["util/docker/entrypoint.sh"]
-CMD ["python3", "examples/containernet_example.py"]
+CMD ["python3", "examples/netunicorn_test.py"]
 
